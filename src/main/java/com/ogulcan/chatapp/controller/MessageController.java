@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ogulcan.chatapp.model.Message;
 import com.ogulcan.chatapp.service.MessageService;
-import com.ogulcan.tempStorage.UserStorage;
+import com.ogulcan.tempStorage.UserTempStorage;
 
 @RestController
 public class MessageController {
@@ -33,7 +33,7 @@ public class MessageController {
 
 		messageService.save(newArr);
 
-		boolean isExists = UserStorage.getInstance().getUsers().contains(to);
+		boolean isExists = UserTempStorage.getInstance().getUsers().contains(to);
 
 		if (isExists) {
 			messagingTemplate.convertAndSend("/topic/messages/" + to, message);
