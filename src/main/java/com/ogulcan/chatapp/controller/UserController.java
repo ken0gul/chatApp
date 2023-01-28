@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ogulcan.tempStorage.UserStorage;
+import com.ogulcan.tempStorage.UserTempStorage;
 
 @RestController
 @CrossOrigin
@@ -19,7 +19,7 @@ public class UserController {
 		System.out.println("handling register user request: " + userName);
 		try {
 
-			UserStorage.getInstance().setUser(userName);
+			UserTempStorage.getInstance().setUser(userName);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -31,6 +31,6 @@ public class UserController {
 	@GetMapping("/fetchAllUsers")
 	public Set<String> fetchAll() {
 		
-		return UserStorage.getInstance().getUsers();
+		return UserTempStorage.getInstance().getUsers();
 	}
 }
