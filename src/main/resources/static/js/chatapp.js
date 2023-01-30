@@ -1,4 +1,4 @@
-const url = 'https://chatapp-ogulcan.up.railway.app';
+ const url = 'https://chatapp-ogulcan.up.railway.app';
 //const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
@@ -9,9 +9,7 @@ let sessionUsers = [];
 
 
     
-window.addEventListener('offline', e => {
-   
-});
+
 
  setInterval(fetchAll,1500);
 
@@ -28,7 +26,7 @@ function connectToChat(userName) {
         let data = JSON.parse(response.body);
         console.log(data);
             if(selectedUser !== data.fromLogin) {
-                notifyUser("You have a new message from " + data.fromLogin);
+                // notifyUser("You have a new message from " + data.fromLogin);
                 
                 document.querySelectorAll('span[data-user]').forEach(i => {
                        
@@ -145,7 +143,7 @@ function fetchAll() {
                 <div class="name">${user}</div>
                 <div class="status">
                     <i class="fa fa-circle online"></i> 
-                    <span id="n-msg" data-user=${user}></span>
+                    <span id="n-msg" data-user='${user}'></span>
                 </div>
             </div></li></a>`
         }
