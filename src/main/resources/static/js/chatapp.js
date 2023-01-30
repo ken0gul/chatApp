@@ -1,10 +1,14 @@
-const url = 'https://chatapp-ogulcan.up.railway.app';
+const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
 let isSelected = false;
+let subscription;
+let users = [];
 
-
-
+window.addEventListener('beforeunload', e => {
+    removeUser();
+    return "Are you sure you want to leave?"
+});
 
 
 window.addEventListener('load', register)
@@ -14,7 +18,7 @@ function connectToChat(userName) {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
         console.log('connected to : ' + frame);
-       stompClient.subscribe('/topic/messages/'+userName, function(response) {
+        subscription = stompClient.subscribe('/topic/messages/'+userName, function(response) {
         let data = JSON.parse(response.body);
         
             if(selectedUser !== data.fromLogin) {
@@ -34,12 +38,21 @@ function connectToChat(userName) {
 
             }
             render(data.message,data.fromLogin);
-         
+    
             
         
        }); 
+
+
     })
+    
+
 }
+
+
+
+
+
 
 function sendMsg(from,text) {
    
@@ -96,11 +109,12 @@ function fetchAll() {
     fetch(url+"/fetchAllUsers").then(response => {
         return response.json();
     }).then(data => {
-        let users = data;
-        
+        users = data;
+        usersArray = data;
         let user;
         let usersList = document.getElementById('users-list');
         usersList.innerHTML = "";
+        console.log('my users ' + users);
         for(let i = 0; i < users.length; i++) {
           
             user = users[i];
@@ -154,4 +168,18 @@ function renderAll(data){
     }
     
 }
+
+
+function removeUser() {
+    let me = document.getElementById('userName').value;
+  
+    fetch('/fetchAllUsers',{
+        method:'POST',
+        headers:{
+            'Content-type':'application/JSON'
+        },
+        body:me
+    }).then(response => response.json()).then(data => console.log(data) );
+}
+
 
