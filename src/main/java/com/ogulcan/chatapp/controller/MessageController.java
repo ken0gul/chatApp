@@ -61,23 +61,9 @@ public class MessageController {
 	
 	@PostMapping("/remove")
 	
-	public String removeUser(@RequestBody String username) throws UnsupportedEncodingException {
-//		 Thread thr = new Thread(()-> {
-//			 
-//			 while(true) {
-//				 try {
-//					 Thread.sleep(1000);
-//					 UserTempStorage.getInstance().removeUserByUsername(username);
-//				 }catch(InterruptedException e) {
-//					 e.printStackTrace();
-//				 }
-//			 }
-//		 });
-//		 thr.start();
-		String encodedString = URLEncoder.encode(username, "UTF-8");
-		String decodedString = URLDecoder.decode(encodedString, "UTF-8");
+	public String removeUser(@RequestBody String username)  {
 
-		UserTempStorage.getInstance().removeUserByUsername(decodedString);
+		UserTempStorage.getInstance().removeUserByUsername(username);
 		
 		return username;
 	}
