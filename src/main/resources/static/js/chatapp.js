@@ -1,4 +1,4 @@
-const url = 'https://chatapp-ogulcan.up.railway.app';
+const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
 let isSelected = false;
@@ -10,7 +10,7 @@ window.addEventListener('beforeunload', e => {
     return "Are you sure you want to leave?"
 });
 
-setInterval(fetchAll,1000);
+ setInterval(fetchAll,2000);
 
 window.addEventListener('load', register)
 function connectToChat(userName) {
@@ -21,7 +21,7 @@ function connectToChat(userName) {
         console.log('connected to : ' + frame);
         subscription = stompClient.subscribe('/topic/messages/'+userName, function(response) {
         let data = JSON.parse(response.body);
-        
+        console.log(data);
             if(selectedUser !== data.fromLogin) {
                 
                 
@@ -68,7 +68,7 @@ function sendMsg(from,text) {
 function register() {
    
     let userName = document.getElementById('userName').value;
-    fetch(url+"/register/" +userName).then(response => connectToChat(userName)).catch(err => {
+    fetch(url+'/register/' +userName).then(response => connectToChat(userName)).catch(err => {
         
         if(err.status == 400){
             alert("It'/s a bit busy now. Try again later")
@@ -107,7 +107,7 @@ function selectUser(userName) {
 }
 
 function fetchAll() {
-    fetch(url+"/fetchAllUsers").then(response => {
+    fetch(url+'/fetchAllUsers').then(response => {
         return response.json();
     }).then(data => {
         users = data;
@@ -117,7 +117,7 @@ function fetchAll() {
         usersList.innerHTML = "";
         console.log('my users ' + users);
         for(let i = 0; i < users.length; i++) {
-          
+            console.log('That my user: ' + user)
             user = users[i];
 
             usersList.innerHTML +=  `<a href="#" onclick="selectUser('${user}')"><li class="clearfix" style="list-style:none;"><img style="width:24px;"
@@ -127,7 +127,7 @@ function fetchAll() {
                 <div class="name">${user}</div>
                 <div class="status">
                     <i class="fa fa-circle online"></i> 
-                    <span id="n-msg" data-user='${user}'></span>
+                    <span id="n-msg" data-user=${user}></span>
                 </div>
             </div></li></a>`
         }
@@ -173,7 +173,7 @@ function renderAll(data){
 
 function removeUser() {
     let me = document.getElementById('userName').value;
-  
+    stompClient.unsubscribe();
     fetch('/remove',{
         method:'POST',
         headers:{
