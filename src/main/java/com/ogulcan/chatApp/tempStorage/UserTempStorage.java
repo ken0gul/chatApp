@@ -1,6 +1,5 @@
 package com.ogulcan.chatApp.tempStorage;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -50,24 +49,23 @@ public class UserTempStorage {
 	}
 	
 	public void removeUserByUsername(String username) {
-//	    Set<User> tempUsers;
-//	    synchronized (users) {
-//	        tempUsers = new HashSet<>(users);
-//	    }
-//	    Iterator<User> it = tempUsers.iterator();
-//	    while (it.hasNext()) {
-//	        User u = it.next();
-//	        if (u.getName().equals(username)) {
-//	            synchronized (users) {
-//	                users.remove(u);
-//	            }
-//	            return;
-//	        }
-//	    }
-//	    throw new NoSuchElementException(username + " not found");
-//	}
-		
-		users.removeIf(u -> u.equals(username));
-
+	    Set<String> tempUsers;
+	    synchronized (users) {
+	        tempUsers = new HashSet<>(users);
+	    }
+	    Iterator<String> it = tempUsers.iterator();
+	    while (it.hasNext()) {
+	        String u = it.next();
+	        if (u.equals(username)) {
+	            synchronized (users) {
+	                users.remove(u);
+	            }
+	            return;
+	        }
+	    }
+	    throw new NoSuchElementException(username + " not found");
 	}
+		
+
+	
 }
