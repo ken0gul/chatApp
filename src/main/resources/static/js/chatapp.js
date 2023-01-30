@@ -1,4 +1,5 @@
-const url = 'https://chatapp-ogulcan.up.railway.app';
+//const url = 'https://chatapp-ogulcan.up.railway.app';
+const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
 let isSelected = false;
@@ -27,7 +28,7 @@ function connectToChat(userName) {
         let data = JSON.parse(response.body);
         console.log(data);
             if(selectedUser !== data.fromLogin) {
-                
+                notifyUser("You have a new message from " + data.fromLogin);
                 
                 document.querySelectorAll('span[data-user]').forEach(i => {
                        
@@ -215,3 +216,23 @@ document.querySelector('#register-btn').addEventListener('click', (e) => {
    
 })
 document.querySelector('#register-btn').addEventListener('click',register);
+
+
+
+
+function notifyUser(message) {
+  // Check if notifications are supported
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  } else if (Notification.permission === "granted") {
+    // If permission is granted, create the notification
+    new Notification(message);
+  } else if (Notification.permission !== "denied") {
+    // If permission is not granted, ask for permission
+    Notification.requestPermission().then(function (permission) {
+      if (permission === "granted") {
+        new Notification(message);
+      }
+    });
+  }
+}
