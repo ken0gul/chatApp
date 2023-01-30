@@ -22,7 +22,7 @@ public class UserController {
 	
 		try {
 
-//			UserTempStorage.getInstance().setUser(userName);
+
 			UserTempStorage.getInstance().setUser(userName);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
@@ -34,8 +34,8 @@ public class UserController {
 	
 	@GetMapping("/fetchAllUsers")
 	public Set<String> fetchAll() {
-		return UserTempStorage.getInstance().getUsers().stream().map(u -> u.getName()).collect(Collectors.toSet());
-//		return UserTempStorage.getInstance().getUsers();
+//		return UserTempStorage.getInstance().getUsers().stream().map(u -> u.getName()).collect(Collectors.toSet());
+		return UserTempStorage.getInstance().getUsers();
 //		return storage.getUsers();
 	}
 }
