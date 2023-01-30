@@ -1,18 +1,22 @@
-const url = 'https://chatapp-ogulcan.up.railway.app';
+const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
 let isSelected = false;
 let subscription;
 let users = [];
+let sessionUsers = [];
 
-window.addEventListener('visibilitychange', e => {
-    removeUser();
-    return "Are you sure you want to leave?"
+
+    
+window.addEventListener('offline', e => {
+   
 });
 
  setInterval(fetchAll,1500);
 
-window.addEventListener('load', register)
+window.addEventListener('load', () => {
+    register();
+})
 function connectToChat(userName) {
     console.log('connecting to chat...')
     let socket = new SockJS(url+'/chat');
@@ -67,7 +71,12 @@ function sendMsg(from,text) {
 
 function register() {
    
-    let userName = document.getElementById('userName').value;
+    
+   
+    let userName=localStorage.getItem('user');
+    if(userName == null) return;
+    
+    document.querySelector('#userName').value = userName;        
     fetch(url+'/register/' +userName).then(response => connectToChat(userName)).catch(err => {
         
         if(err.status == 400){
@@ -107,19 +116,27 @@ function selectUser(userName) {
 }
 
 function fetchAll() {
+    
     fetch(url+'/fetchAllUsers').then(response => {
         return response.json();
     }).then(data => {
         users = data;
+
+      
+    //    let username = sessionStorage.getItem('user');
+    //    let uName = document.getElementById('userName');
+     
         usersArray = data;
         let user;
         let usersList = document.getElementById('users-list');
         usersList.innerHTML = "";
-        console.log('my users ' + users);
-        for(let i = 0; i < users.length; i++) {
-            console.log('That my user: ' + user)
-            user = users[i];
+       
 
+        
+        for(let i = 0; i < users.length; i++) {
+            
+            user = users[i];
+            
             usersList.innerHTML +=  `<a href="#" onclick="selectUser('${user}')"><li class="clearfix" style="list-style:none;"><img style="width:24px;"
             src="https://bootdey.com/img/Content/avatar/avatar${i+1}.png"
             alt="avatar">
@@ -171,7 +188,7 @@ function renderAll(data){
 }
 
 
-function removeUser() {
+function removeUser(user) {
     let me = document.getElementById('userName').value;
     stompClient.unsubscribe();
     fetch('/remove',{
@@ -179,8 +196,22 @@ function removeUser() {
         headers:{
             'Content-type':'application/JSON'
         },
-        body:me
+        body:user
     }).then(response => response.json()).then(data => console.log(data) );
 }
 
+document.querySelector('#register-btn').addEventListener('click', (e) => {
+    let user = document.querySelector('#userName').value;
+   
+    let previousUser= localStorage.getItem('user');
+    if(previousUser == null) {
+        localStorage.setItem('user',user);
+    } 
+    removeUser(previousUser);
+    localStorage.setItem('user',user);
 
+
+
+   
+})
+document.querySelector('#register-btn').addEventListener('click',register);
