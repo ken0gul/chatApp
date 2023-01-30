@@ -59,7 +59,7 @@ public class MessageController {
 		return messageService.getAllMessages();
 	}
 	
-	@PostMapping("/fetchAllUsers")
+	@PostMapping("/remove")
 	
 	public String removeUser(@RequestBody String username) throws UnsupportedEncodingException {
 //		 Thread thr = new Thread(()-> {

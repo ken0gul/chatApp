@@ -173,7 +173,7 @@ function renderAll(data){
 function removeUser() {
     let me = document.getElementById('userName').value;
   
-    fetch('/fetchAllUsers',{
+    fetch('/remove',{
         method:'POST',
         headers:{
             'Content-type':'application/JSON'
