@@ -10,7 +10,7 @@ window.addEventListener('beforeunload', e => {
     return "Are you sure you want to leave?"
 });
 
- setInterval(fetchAll(),2000);
+ setInterval(fetchAll,1500);
 
 window.addEventListener('load', register)
 function connectToChat(userName) {
