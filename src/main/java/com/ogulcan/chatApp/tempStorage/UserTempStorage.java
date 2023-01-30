@@ -15,10 +15,10 @@ public class UserTempStorage {
 
 	 
 	private static UserTempStorage instance;
-	private Set<User> users;
+	private Set<String> users;
 	
 	private UserTempStorage() {
-		users = Collections.synchronizedSet(new HashSet<User>());
+		users = new HashSet<>();
 	}
 	
 	public static synchronized UserTempStorage getInstance() {
@@ -31,43 +31,43 @@ public class UserTempStorage {
 	}
 	
 	
-	public Set<User> getUsers() {
+	public Set<String> getUsers() {
 		return users;
 	}
 	
 	public void setUser(String username) throws Exception {
-		for(User u : users) {
+//		for(User u : users) {
 			
-		if(u.getName().contains(username)) {
+		if(users.contains(username)) {
 			throw new Exception("User already exists with login: " + username);
-		} 
+//		} 
 		}
 			
-			this.users.add(new User(username));
+			this.users.add(username);
 		
 			
 		
 	}
 	
 	public void removeUserByUsername(String username) {
-		username = ""+username;
-		System.out.println(username.equals("123"));
-	    Set<User> tempUsers;
-	    synchronized (users) {
-	        tempUsers = new HashSet<>(users);
-	    }
-	    Iterator<User> it = tempUsers.iterator();
-	    while (it.hasNext()) {
-	        User u = it.next();
-	        if (u.getName().equals(username)) {
-	            synchronized (users) {
-	                users.remove(u);
-	            }
-	            return;
-	        }
-	    }
-	    throw new NoSuchElementException(username + " not found");
+//	    Set<User> tempUsers;
+//	    synchronized (users) {
+//	        tempUsers = new HashSet<>(users);
+//	    }
+//	    Iterator<User> it = tempUsers.iterator();
+//	    while (it.hasNext()) {
+//	        User u = it.next();
+//	        if (u.getName().equals(username)) {
+//	            synchronized (users) {
+//	                users.remove(u);
+//	            }
+//	            return;
+//	        }
+//	    }
+//	    throw new NoSuchElementException(username + " not found");
+//	}
+		
+		users.removeIf(u -> u.equals(username));
+
 	}
-
-
 }
