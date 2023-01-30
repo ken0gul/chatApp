@@ -5,7 +5,7 @@ let isSelected = false;
 let subscription;
 let users = [];
 
-window.addEventListener('unload', e => {
+window.addEventListener('visibilitychange', e => {
     removeUser();
     return "Are you sure you want to leave?"
 });
