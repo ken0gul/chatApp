@@ -1,4 +1,4 @@
-const url = 'http://localhost:8080';
+const url = 'https://chatapp-ogulcan.up.railway.app';
 let stompClient;
 let selectedUser;
 let isSelected = false;
