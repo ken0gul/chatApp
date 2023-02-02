@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+body {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	
+}
+
+.container {
+	margin-top: 20%;
+}
