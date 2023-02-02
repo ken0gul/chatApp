@@ -71,7 +71,7 @@ if (message.trim() !== '') {
 var context = {
 messageOutput: message,
 time: getCurrentTime(),
-toUserName: selectedUser
+toUserName: userSpan
 };
 var templateResponse = `
 <li class="clearfix" style="display:flex; flex-direction:column; align-items:flex-end;">
