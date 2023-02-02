@@ -33,16 +33,16 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
 	
-//	@GetMapping("")
-//	public String getUserPage(ModelMap model) {
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//		String username = userDetails.getUsername();
-//		
-//		model.put("username", username);
-//		
-//		return "index";
-//	}
+	@GetMapping("")
+	public String getUserPage(ModelMap model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		String username = userDetails.getUsername();
+		
+		model.put("username", username);
+		
+		return "index";
+	}
 
 	@GetMapping("/register")
 	public String register(ModelMap model) {
