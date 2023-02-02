@@ -1,41 +1,95 @@
 package com.ogulcan.chatapp.controller;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ogulcan.chatApp.tempStorage.UserTempStorage;
+import com.ogulcan.chatapp.domain.User;
+import com.ogulcan.chatapp.service.MessageService;
+import com.ogulcan.chatapp.service.UserService;
 
-@RestController
+@Controller
 @CrossOrigin
 public class UserController {
 
 //	private UserTempStorage storage = new UserTempStorage();
+
+	@Autowired
+	private UserService userService;
+
 	
-	@GetMapping("/register/{userName}")
-	public ResponseEntity<Void> register(@PathVariable String userName) {
+	@Autowired
+	private MessageService messageService;
+	@Autowired
+	private PasswordEncoder bCryptPasswordEncoder;
 	
+//	@GetMapping("")
+//	public String getUserPage(ModelMap model) {
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//		String username = userDetails.getUsername();
+//		
+//		model.put("username", username);
+//		
+//		return "index";
+//	}
+
+	@GetMapping("/register")
+	public String register(ModelMap model) {
+
+		model.put("user", new User());
+
+		return "register";
+	}
+
+	@PostMapping("/register")
+	public String registerUser(User user, ModelMap model) {
+		User usr = new User();
+		usr.setUsername(user.getUsername());
+		usr.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		User myUser = userService
+				.saveUser(usr);
+
+		return "redirect:/login";
+	}
+
+	@GetMapping("/register-chat")
+	@ResponseBody
+	public User enterChat() {
+		
+		String username = "";
+		User user = null;
 		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			username = userDetails.getUsername();
+			System.out.println(username);
+			user = userService.findUserByUsername(username);
+			user.setJoined(true);
+			userService.saveUser(user);
 
-
-			UserTempStorage.getInstance().setUser(userName);
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
+//			return "User is already there";
+		
 		}
 
-		return ResponseEntity.ok().build();
+		return user;
 	}
-	
-	
+
 	@GetMapping("/fetchAllUsers")
-	public Set<String> fetchAll() {
-//		return UserTempStorage.getInstance().getUsers().stream().map(u -> u.getName()).collect(Collectors.toSet());
-		return UserTempStorage.getInstance().getUsers();
-//		return storage.getUsers();
+	@ResponseBody
+	public List<User> fetchAll() {
+	
+		return userService.getAllUsers();
 	}
 }
