@@ -76,7 +76,7 @@ function sendMsg(from,text,date) {
 }
 
 function register() {
-    // setInterval(fetchAll,2500);
+    setInterval(fetchAll,10000);
           
     fetch(url+'/register-chat').then(response => response.json()).then(data => {
         console.log(data)
