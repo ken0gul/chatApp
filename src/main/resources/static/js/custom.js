@@ -3,7 +3,7 @@ let chatHistory;
 let button;
 let textarea;
 let chatHistoryList;
-
+let userSpan = document.getElementById('userName').value;
 function init() {
 cacheDOM();
 bindEvents();
@@ -21,18 +21,18 @@ textarea = document.querySelector('#chat-input');
 chatHistoryList = chatHistory.querySelector('ul');
 }
 
-function render(message, userName) {
+function render(message, usernameData) {
 scrollToBottom();
 
 
 let contextResponse = {
 response: message,
 time: getCurrentTime(),
-userName: userName
+userName: userSpan
 };
 
 
-if(userName === contextResponse.userName) {
+if(userSpan === contextResponse.userName) {
 
     let templateResponse = `<li class="clearfix" style="display:flex; flex-direction:column; align-items:flex-start;">
     <div class="message-data align-right">
@@ -52,10 +52,17 @@ if(userName === contextResponse.userName) {
 }
 }
 
+
+
+
+
+
+
 function sendMessage(message) {
-let username = document.querySelector('#userName').value;
-if(username == "") alert('Enter your username to send a message')
-sendMsg(username, message);
+    let userSpan = document.getElementById('userName').value;
+if(userSpan == "") alert('Enter your username to send a message');
+console.log("USERSPAN " + userSpan)
+sendMsg(userSpan, message, getCurrentTime());
 scrollToBottom();
 
 
@@ -69,11 +76,11 @@ toUserName: selectedUser
 var templateResponse = `
 <li class="clearfix" style="display:flex; flex-direction:column; align-items:flex-end;">
     <div class="message-data align-right">
-        <span class="message-data-time" >${getCurrentTime()}</span> &nbsp; &nbsp;
-        <span class="message-data-name" >${username}</span> <i class="fa fa-circle me"></i>
+        <span class="message-data-time" >${context.time}</span> &nbsp; &nbsp;
+        <span class="message-data-name" >${context.toUserName}</span> <i class="fa fa-circle me"></i>
     </div>
     <div class="message other-message float-right">
-        ${message}
+        ${context.messageOutput}
     </div>
 </li>
 `;
@@ -87,7 +94,8 @@ chatHistoryList.insertAdjacentHTML('beforeend',templateResponse);
 }
 
 function scrollToBottom() {
-chatHistory.scrollTop = chatHistory.scrollHeight;
+chatHistoryList.scrollTop = chatHistoryList.scrollHeight;
+
 }
 
 function getCurrentTime() {
@@ -95,13 +103,15 @@ return new Date().toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, 
 }
 
 function addMessage() {
-    let username = document.querySelector('#userName').value;
+    console.log("SELECTED " + selectedUser)
+    // let username = document.querySelector('#username').value;
     if(selectedUser == null) return; 
-    if(selectedUser == username) return;
+    if(selectedUser == userSpan) return;
 sendMessage(textarea.value);
 }
 
 function addMessageEnter(event) {
+    // let userSpan = document.getElementById('user-span').textContent;
     let username = document.querySelector('#userName').value;
     if(selectedUser == null) return; 
     if(selectedUser == username) return;
