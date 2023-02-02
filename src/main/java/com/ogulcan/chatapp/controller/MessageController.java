@@ -1,22 +1,21 @@
 package com.ogulcan.chatapp.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ogulcan.chatApp.tempStorage.UserTempStorage;
-import com.ogulcan.chatapp.model.Message;
+import com.ogulcan.chatapp.domain.Message;
+import com.ogulcan.chatapp.domain.User;
+import com.ogulcan.chatapp.model.MessageModel;
 import com.ogulcan.chatapp.service.MessageService;
+import com.ogulcan.chatapp.service.UserService;
 
 @RestController
 public class MessageController {
@@ -26,46 +25,64 @@ public class MessageController {
 
 	@Autowired
 	private MessageService messageService;
-	
+
+	@Autowired
+	private UserService service;
+
 //	private UserTempStorage storage = new UserTempStorage();
 	
+
 	@MessageMapping("/chat/{to}")
-	public void sendMessage(@DestinationVariable String to, Message message) {
-		
-		
-		
-		
+	@SendTo("/topic/messages/{to}")
+	public MessageModel sendMessage(@DestinationVariable String to, @Payload MessageModel message) {
 
-		String[] newArr = new String[4];
-		newArr[0] = to;
-		newArr[1] = message.getMessage();
-		newArr[2] = message.getDate().toString();
-		newArr[3] = message.getFromLogin();
+		User user = service.findUserByUsername(message.getMsgFrom());
 
-		messageService.save(newArr);
+		User user2 = service.findUserByUsername(to);
+		Message entityMessage = new Message();
+		entityMessage.setMessage(message.getMessage());
+		entityMessage.setFromLogin(message.getMsgFrom());
+		entityMessage.setDate(message.getDate());
+		entityMessage.setMsgFrom(message.getMsgFrom());
+		entityMessage.setReceiver(user2);
+		entityMessage.setSender(user);
+		
 	
-//		boolean isExists = UserTempStorage.getInstance().getUsers().contains(to);
-		boolean isExists = UserTempStorage.getInstance().getUsers().contains(to);
 
-		if (isExists) {
-			messagingTemplate.convertAndSend("/topic/messages/" + to, message);
+		if (user != null && user2 != null) {
+			user.getSentMessages().add(entityMessage);
+			
+
+			user2.getReceivedMessages().add(entityMessage);
+			
+
+			service.saveUser(user);
+			service.saveUser(user2);
+
+			
+			
+
+//			messagingTemplate.convertAndSend("/topic/messages/" + to, message);
+			messageService.save(entityMessage);
 		}
+		return message;
 
 	}
 
 	@GetMapping("/messages")
 
-	public List<String[]> getAllMessages() {
+	public List<Message> getAllMessages() {
+
 		return messageService.getAllMessages();
 	}
-	
-	@PostMapping("/remove")
-	
-	public String removeUser(@RequestBody String username)  {
 
-		UserTempStorage.getInstance().removeUserByUsername(username);
-		
-		return username;
-	}
+//	@PostMapping("/remove")
+//	
+//	public String removeUser(@RequestBody String username)  {
+//
+//		UserTempStorage.getInstance().removeUserByUsername(username);
+//		
+//		return username;
+//	}
 
 }
