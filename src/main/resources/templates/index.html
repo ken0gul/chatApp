@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Demo Chat Application</title>
@@ -24,10 +24,11 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fa fa-search"></i></span>
 							</div>
-							<input type="text" id="userName" class="form-control"
+							<!-- <h2 id="username" >User: <span id="user-span">[[${username}]]</span></h2> -->
+							<input  type="text" id="userName"  class="form-control"
 								placeholder="Enter your name">
 							<button id="register-btn" >Enter the chat</button>
-							<button onclick="fetchAll()">Refresh</button>
+							<button id="refresh">Refresh</button>
 						</div>
 						<ul id="users-list" class="list-unstyled chat-list mt-2 mb-0">
 
