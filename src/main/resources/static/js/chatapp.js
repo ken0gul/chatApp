@@ -153,7 +153,6 @@ function fetchAll() {
             user = users[i];
             
             usersList.innerHTML +=  `<a href="#" onclick="selectUser('${user.username}')"><li class="clearfix" style="list-style:none;"><img style="width:24px;"
-            // src="https://bootdey.com/img/Content/avatar/avatar${i+1}.png"
             src="https://i.pravatar.cc/150?img=${i+1}"
             alt="avatar">
             <div class="about">
