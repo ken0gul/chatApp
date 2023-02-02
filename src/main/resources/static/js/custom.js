@@ -21,7 +21,7 @@ textarea = document.querySelector('#chat-input');
 chatHistoryList = chatHistory.querySelector('ul');
 }
 
-function render(message, usernameData) {
+function render(message, userSpan) {
 scrollToBottom();
 
 
@@ -59,7 +59,7 @@ if(userSpan === contextResponse.userName) {
 
 
 function sendMessage(message) {
-    
+    let userSpan = document.getElementById('userName').value;
 if(userSpan == "") alert('Enter your username to send a message');
 console.log("USERSPAN " + userSpan)
 sendMsg(userSpan, message, getCurrentTime());
