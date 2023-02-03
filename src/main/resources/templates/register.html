@@ -2,24 +2,40 @@
 <html xmlns:th="http://thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="/css/login.css">
 <title>Sign-up</title>
 </head>
 <body>
-	
-	<form action="#" method="post">
-		
-		<div>
-		<label>Username:</label>
-		<input type="text" th:field="${user.username}">
+​
+		<div class="container">
+		<div class="screen">
+			<div class="screen__content">
+				<form class="login" action="#" method="post">
+					<div class="login__field">
+						<i class="login__icon fas fa-user"></i> 
+						<input type="text" class="login__input" id="username" name="username" th:field="${user.username}" placeholder="User name">
+					</div>
+					<div class="login__field">
+						<i class="login__icon fas fa-lock">
+						</i> <input type="password" class="login__input" th:field="${user.password}" id="password" name="password" placeholder="Password">
+					</div>
+					<div class="buttons">
+						<button class="button login__submit" type="submit" style="width: 50%">
+							<span class="button__text">Submit</span> <i
+								class="button__icon fas fa-chevron-right"></i>
+						</button>
+						
+					</div>
+				</form>
+			</div>
+			<div class="screen__background">
+				
+				<span class="screen__background__shape screen__background__shape1"></span>
+				<span class="screen__background__shape screen__background__shape1"></span>
+				
+			</div>
 		</div>
-		
-		<div>
-			<label>Password:</label>
-		<input type="password" th:field="${user.password}">
-		</div>
-		
-		<button type="submit">Submit</button>
-	</form>
-
+	</div>
+​
 </body>
 </html>
