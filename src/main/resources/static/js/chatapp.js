@@ -1,5 +1,5 @@
- const url = 'https://chatapp-ogulcan.up.railway.app';
-// const url = 'http://localhost:8080';
+// const url = 'https://chatapp-ogulcan.up.railway.app';
+ const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
 let isSelected = false;
@@ -9,14 +9,14 @@ let sessionUsers = [];
 let messages = [];
 let myData;
 let messageFrom;
-
+let socket;
 
 
 
 
 function connectToChat(userName) {
     console.log('connecting to chat...')
-    let socket = new SockJS(url+'/chat');
+    socket = new SockJS(url+'/chat');
     socket.addEventListener('open', e => {
         console.log('New user is subscribed the channel')
         fetchAll();
@@ -25,13 +25,24 @@ function connectToChat(userName) {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
         console.log('connected to : ' + frame);
-        let user = ""+userName;
+	
+     
+         
+         
+         
+    
+        let user = userName;
         subscription = stompClient.subscribe('/topic/messages/'+user, function(response) {
             let data = JSON.parse(response.body);
            
-               
+               	socket.onmessage = e => { 
+					   
+					   renderNotification(data)
+					   
+					   }   
                 
-                if(selectedUser !== data.msgFrom) {
+                if(selectedUser !== data.msgFrom ) {
+					console.log('Yeah it works')
                     messageFrom = data;
                     renderNotification(data);
                     
@@ -40,16 +51,18 @@ function connectToChat(userName) {
                     render(data.message,data.msgFrom);
                 }
        }); 
+     
     })
 }
 
 
 
 function renderNotification(data){
+		
     document.querySelectorAll('span[data-user]').forEach(i => {
                        
         if(i.getAttribute('data-user') == data.msgFrom){
-            
+            notifyUser("You have a message dude!")
             i.textContent = 'new message';
             i.style.color = 'red';
          }
@@ -124,19 +137,7 @@ function selectUser(userName) {
 }
 
 function fetchAll() {
-
-    // if(isSelected == false) {
-    // document.querySelectorAll('span[data-user]').forEach(i => {
-                       
-    //     if(i.getAttribute('data-user') == messageFrom.msgFrom){
-            
-    //         i.textContent = 'new message';
-    //         i.style.color = 'red';
-    //      }
-     
-    //  })
-
-    // }
+	
     fetch(url+'/fetchAllUsers').then(response => {
         return response.json();
     }).then(data => {
@@ -207,17 +208,17 @@ function renderAll(from,message,date,receiver){
 }
 
 
-// function removeUser(user) {
-//     let me = document.getElementById('userName').value;
-//     stompClient.unsubscribe();
-//     fetch('/remove',{
-//         method:'POST',
-//         headers:{
-//             'Content-type':'application/JSON'
-//         },
-//         body:user
-//     }).then(response => response.json()).then(data => console.log(data) );
-// }
+function removeUser() {
+    let me = document.getElementById('userName').value;
+    stompClient.unsubscribe();
+    fetch('/remove',{
+        method:'POST',
+        headers:{
+            'Content-type':'application/JSON'
+        },
+        body:me
+    }).then(response => response.json()).then(data => console.log(data) );
+}
 
 // document.querySelector('#register-btn').addEventListener('click', (e) => {
  
@@ -231,19 +232,22 @@ document.querySelector('#register-btn').addEventListener('click',register);
 
 
 
-// function notifyUser(message) {
-//   // Check if notifications are supported
-//   if (!("Notification" in window)) {
-//     alert("This browser does not support desktop notification");
-//   } else if (Notification.permission === "granted") {
-//     // If permission is granted, create the notification
-//     new Notification(message);
-//   } else if (Notification.permission !== "denied") {
-//     // If permission is not granted, ask for permission
-//     Notification.requestPermission().then(function (permission) {
-//       if (permission === "granted") {
-//         new Notification(message);
-//       }
-//     });
-//   }
-// }
+ function notifyUser(message) {
+   // Check if notifications are supported
+   if (!("Notification" in window)) {
+     alert("This browser does not support desktop notification");
+   } else if (Notification.permission === "granted") {
+     // If permission is granted, create the notification
+     new Notification(message);
+   } else if (Notification.permission !== "denied") {    
+	    // If permission is not granted, ask for permission
+     Notification.requestPermission().then(function (permission) {
+       if (permission === "granted") {
+         new Notification(message);
+       }
+     });
+   }
+ }
+
+
+
