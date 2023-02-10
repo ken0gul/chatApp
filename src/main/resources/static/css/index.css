@@ -35,7 +35,8 @@ body{
     -moz-transition: .5s;
     -o-transition: .5s;
     -webkit-transition: .5s;
-    transition: .5s
+    transition: .5s;
+    overflow:scroll;
 }
 
 .people-list .chat-list li {
@@ -286,4 +287,10 @@ input{
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+
+#users-list{
+overflow: scroll;
+height:500px;	
 }
