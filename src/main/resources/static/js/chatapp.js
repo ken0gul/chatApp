@@ -1,5 +1,5 @@
  const url = 'https://chatapp-ogulcan.up.railway.app';
- //const url = 'http://localhost:8080';
+//const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
 let isSelected = false;
@@ -39,6 +39,7 @@ function connectToChat(userName) {
 					   
 					   renderNotification(data)
 					   
+					   
 					   }   
                 
                 if(selectedUser !== data.msgFrom ) {
@@ -46,10 +47,11 @@ function connectToChat(userName) {
                     messageFrom = data;
                     renderNotification(data);
                     
-                } else {
+                }
+                
                     
                     render(data.message,data.msgFrom);
-                }
+                
        }); 
      
     })
@@ -239,14 +241,14 @@ document.querySelector('#register-btn').addEventListener('click',register);
    } else if (Notification.permission === "granted") {
      // If permission is granted, create the notification
      let notification =new Notification(message);
-     notification.onclick = selectedUser(data.msgFrom)
+     notification.onclick = selectUser(data.msgFrom)
    
    } else if (Notification.permission !== "denied") {    
 	    // If permission is not granted, ask for permission
      Notification.requestPermission().then(function (permission) {
        if (permission === "granted") {
         let notification= new Notification(message);
-       notification.onclick = selectedUser(data.msgFrom)
+       notification.onclick = selectUser(data.msgFrom)
        }
      });
    }
