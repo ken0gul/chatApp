@@ -239,13 +239,14 @@ document.querySelector('#register-btn').addEventListener('click',register);
    } else if (Notification.permission === "granted") {
      // If permission is granted, create the notification
      let notification =new Notification(message);
-     notification.onclick = render(data.message,data.msgFrom)
+     notification.onclick = selectedUser(data.msgFrom)
+   
    } else if (Notification.permission !== "denied") {    
 	    // If permission is not granted, ask for permission
      Notification.requestPermission().then(function (permission) {
        if (permission === "granted") {
         let notification= new Notification(message);
-         notification.onclick = render(data.message,data.msgFrom)
+       notification.onclick = selectedUser(data.msgFrom)
        }
      });
    }
