@@ -62,7 +62,7 @@ function renderNotification(data){
     document.querySelectorAll('span[data-user]').forEach(i => {
                        
         if(i.getAttribute('data-user') == data.msgFrom){
-            notifyUser("You have a message dude!")
+            notifyUser("You have a message dude!",data)
             i.textContent = 'new message';
             i.style.color = 'red';
          }
@@ -232,18 +232,20 @@ document.querySelector('#register-btn').addEventListener('click',register);
 
 
 
- function notifyUser(message) {
+ function notifyUser(message,data) {
    // Check if notifications are supported
    if (!("Notification" in window)) {
      alert("This browser does not support desktop notification");
    } else if (Notification.permission === "granted") {
      // If permission is granted, create the notification
-     new Notification(message);
+     let notification =new Notification(message);
+     notification.onclick = render(data.message,data.msgFrom)
    } else if (Notification.permission !== "denied") {    
 	    // If permission is not granted, ask for permission
      Notification.requestPermission().then(function (permission) {
        if (permission === "granted") {
-         new Notification(message);
+        let notification= new Notification(message);
+         notification.onclick = render(data.message,data.msgFrom)
        }
      });
    }
