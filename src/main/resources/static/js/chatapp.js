@@ -1,5 +1,5 @@
-// const url = 'https://chatapp-ogulcan.up.railway.app';
- const url = 'http://localhost:8080';
+ const url = 'https://chatapp-ogulcan.up.railway.app';
+ //const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
 let isSelected = false;
