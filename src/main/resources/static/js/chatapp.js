@@ -45,7 +45,7 @@ function connectToChat(userName) {
                 if(selectedUser !== data.msgFrom ) {
 					console.log('Yeah it works')
                     messageFrom = data;
-                    renderNotification(data);
+                   //renderNotification(data);
                     
                 }
                 
