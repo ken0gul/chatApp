@@ -64,7 +64,8 @@ function renderNotification(data){
     document.querySelectorAll('span[data-user]').forEach(i => {
                        
         if(i.getAttribute('data-user') == data.msgFrom){
-            notifyUser("You have a message dude!",data)
+            notifyUser("You have a message dude!")
+            selectUser(data.msgFrom);
             i.textContent = 'new message';
             i.style.color = 'red';
          }
@@ -234,21 +235,22 @@ document.querySelector('#register-btn').addEventListener('click',register);
 
 
 
- function notifyUser(message,data) {
+ function notifyUser(message) {
+	 let notification;
    // Check if notifications are supported
    if (!("Notification" in window)) {
      alert("This browser does not support desktop notification");
    } else if (Notification.permission === "granted") {
      // If permission is granted, create the notification
-     let notification =new Notification(message);
-     notification.onclick = selectUser(data.msgFrom)
+      notification =new Notification(message);
+ 
    
    } else if (Notification.permission !== "denied") {    
 	    // If permission is not granted, ask for permission
      Notification.requestPermission().then(function (permission) {
        if (permission === "granted") {
-        let notification= new Notification(message);
-       notification.onclick = selectUser(data.msgFrom)
+         notification= new Notification(message);
+     
        }
      });
    }
