@@ -9,8 +9,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ogulcan.chatApp.tempStorage.UserTempStorage;
 import com.ogulcan.chatapp.domain.Message;
 import com.ogulcan.chatapp.domain.User;
 import com.ogulcan.chatapp.model.MessageModel;
@@ -39,7 +42,10 @@ public class MessageController {
 		User user = service.findUserByUsername(message.getMsgFrom());
 
 		User user2 = service.findUserByUsername(to);
+		
+		
 		Message entityMessage = new Message();
+		
 		entityMessage.setMessage(message.getMessage());
 		entityMessage.setFromLogin(message.getMsgFrom());
 		entityMessage.setDate(message.getDate());
@@ -62,7 +68,6 @@ public class MessageController {
 			
 			
 
-//			messagingTemplate.convertAndSend("/topic/messages/" + to, message);
 			messageService.save(entityMessage);
 		}
 		return message;
@@ -79,8 +84,9 @@ public class MessageController {
 //	@PostMapping("/remove")
 //	
 //	public String removeUser(@RequestBody String username)  {
-//
-//		UserTempStorage.getInstance().removeUserByUsername(username);
+//		System.out.println(username);
+//		service.removeUser(username);
+//		System.out.println("User " + username + " was removed");
 //		
 //		return username;
 //	}
